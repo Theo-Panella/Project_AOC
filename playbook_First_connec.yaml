@@ -1,0 +1,8 @@
+- hosts: machines
+  vars_files:
+    - group_vars/all/passwd.yml
+
+# Conexão RDP com o servidor Windows, utilizando as variáveis definidas no arquivo de variáveis vault.
+  tasks:
+  - name: executar rdp
+    shell: xfreerdp3 /u:{{ userRDP }} /p:{{ passwdRDP }} /v:{{ serverRDP }} /cert:tofu

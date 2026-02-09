@@ -1,0 +1,27 @@
+#Definir as senhas para acesso remoto via SSH e para o comando sudo em cada máquina.
+sudo_passwords:
+  "IP_Machine_1":
+    Usuario_Machine_1:
+      become: "senha_Machine_1"
+  "IP_Machine_2":
+    Usuario_Machine_2:
+      become: "senha_Machine_2"
+  "IP_Machine_3":
+    Usuario_Machine_3:
+      become: "senha_Machine_3"
+  "IP_Machine_4":
+    Usuario_Machine_4:
+      become: "senha_Machine_4"
+
+# Em caso de Multiplas maquinas com o mesmo usuario, pode ser utilizado o seguinte formato:
+# sudo_passwords:
+#   "IP_Machine_1":
+#       become: "senha_Machine"
+#   "IP_Machine_2":
+#       become: "senha_Machine" 
+
+
+#IP ou DNS do servidor RDP, Usuario e senha para acesso remoto via RDP
+serverRDP: "Servidor_RDP"
+userRDP: "Usuario_RDP"
+passwdRDP: "senha_RDP"

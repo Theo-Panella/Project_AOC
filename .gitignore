@@ -1,0 +1,6 @@
+# Arquivos que não devem ser rastreados pelo Git
+# Devem ser configurados por cada um que clona o repositório, pois podem conter informações sensíveis ou específicas de cada ambiente.
+
+#Esse são os arquivos de configuração do LXDE, com informações privadas do projeto original
+Arquivos/lxde-rc.xml
+Arquivos/arquivo_backup

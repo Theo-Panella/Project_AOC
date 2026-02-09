@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Icon=firefox-esr
+Categories=Network;WebBrowser;
+Name=Acesso Remoto
+Exec=firefox -kiosk http://localhost:3000 
+X-XFCE-Autostart=true
