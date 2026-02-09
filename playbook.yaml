@@ -1,0 +1,250 @@
+- hosts: machines
+  become: yes
+
+  vars_files:
+    - group_vars/all/passwd.vault.yml
+
+  vars:
+    site_path: /home/{{ ansible_user }}/Documentos/Site_debian_rdp
+    ocs_server_playbook: '{{ ocs_server }}'
+    ansible_become_pass: >- 
+      {{ sudo_passwords[inventory_hostname][ansible_user].become }}
+
+  tasks:
+  # ================== FOWARDX11 via SSh ==================
+  - name: Configurar SSH
+    lineinfile:
+      path: /etc/ssh/ssh_config
+      regexp: '{{ item.regexp}}'
+      line: '{{ item.line}}'
+    loop:
+      - { regexp: '^#?\s*ForwardX11 no', line: '    ForwardX11 yes' }
+      - { regexp: '^#?\s*ForwardX11Trusted yes', line: '    ForwardX11Trusted yes' }
+      - { regexp: '^#?\s*PasswordAuthentication yes', line: '    PasswordAuthentication no' }
+
+  - name: Configurar SSHD
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '{{ item.regexp}}'
+      line: '{{ item.line}}'
+    loop:
+      - { regexp: '^#?\s*PubkeyAuthentication yes', line: 'PubkeyAuthentication yes' }
+      - { regexp: '^#?\s*X11Forwarding yes', line: 'X11Forwarding yes' }
+      - { regexp: '^#?\s*AuthorizedKeysFile     .ssh/authorized_keys .ssh/authorized_keys2', line: 'AuthorizedKeysFile     .ssh/authorized_keys' }
+      - { regexp: '^#?\s*PasswordAuthentication yes', line: 'PasswordAuthentication no' }
+      - { regexp: '^#?\s*PermitEmptyPasswords no', line: 'PermitEmptyPasswords no'}
+
+  - name: Reiniciar serviço sshd
+    service:
+      name: ssh
+      state: restarted
+
+  # ================== PACOTES ==================
+  - name: Instalar pacotes do sistema
+    apt:
+      name:
+        - ufw
+        - cups
+        - system-config-printer
+        - freerdp3-x11
+        - ocsinventory-agent
+        - node-express
+        - npm
+      state: present
+      update_cache: yes
+
+  # ================== LIMPEZA ==================
+  - name: Remover pacotes inúteis
+    apt:
+      name:
+        - dictionaries-common
+        - 7zip
+        - deluge
+        - libreoffice-*
+        - mplay
+      state: absent
+      purge: yes
+
+  - name: Limpeza Automatica de pacotes 
+    apt:
+      autoremove: yes
+
+  # ================== UFW ==================
+  - name: Habilitar UFW
+    ufw:
+      state: enabled
+      policy: allow
+
+  - name: Permitir acesso ao IP host
+    ufw:
+      rule: allow
+      src: "{{ ansible_host_ip }}"
+      port: 22
+      proto: tcp
+
+  - name: Bloquear acesso externo geral
+    ufw:
+      default: deny
+      direction: incoming
+      port: any
+      proto: any
+
+  - name: Permitir acesso ao OCS Server
+    ufw:
+      rule: allow
+      src: "{{ ocs_server_playbook }}"
+      port: 80
+      proto: tcp
+
+  # ================== CUPS ==================
+  - name: Habilitar serviço CUPS
+    service:
+      name: cups
+      enabled: yes
+      state: started
+
+  # ================== SITE NODE ==================
+  - name: Copiar site RDP
+    copy:
+      src: ~/Documentos/ansible/Site_debian_rdp
+      dest:  /home/{{ ansible_user }}/Documentos
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: preserve
+
+  - name: Garantir scripts executáveis com 511 de permissão #5 = r-x / #1 = --x / #1 = --x
+    file:
+      path: "{{ site_path }}/{{ item }}"
+      mode: '0511'
+    loop:
+      - desligar.sh
+      - conectar.sh
+
+  - name: Aplicando os dados corretos do conectar.sh
+    replace:
+      path: "{{ site_path }}/conectar.sh"
+      regexp: ' {{ item.regexp }}'
+      replace: "{{ item.line }}"
+    loop:
+      - { regexp: 'userRDP', line: '{{ userRDP }}' }
+      - { regexp: 'passwdRDP', line: '{{ passwdRDP }}' }
+      - { regexp: 'serverRDP', line: '{{ serverRDP }}' }
+
+  - name: Instalar dependências Node
+    npm:
+      path: "{{ site_path }}"
+      name: express
+      state: present
+
+  # ================== SYSTEMD ==================
+  - name: Criar arquivo de serviço systemd
+    copy:
+      dest: /etc/systemd/system/server.service
+      content: |
+        [Unit]
+        Description=Node.js Server
+        After=network.target
+
+        [Service]
+        ExecStart=/usr/bin/node /home/{{ ansible_user }}/Documentos/Site_debian_rdp/server.js
+        WorkingDirectory={{ site_path }}
+        Restart=always
+        User={{ ansible_user }}
+        Environment=PATH=/usr/bin:/usr/local/bin
+        Environment=NODE_ENV=production
+
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: Ativar serviço Node
+    systemd:
+      name: server.service
+      enabled: yes
+      state: started
+      daemon_reload: True
+
+  # ================== AUTOSTART FIREFOX ==================
+  - name: Criar diretório autostart
+    file:
+      path: "/home/{{ ansible_user }}/.config/autostart"
+      state: directory
+      owner: "{{ ansible_user }}"
+
+  - name: Copiar launcher Firefox para autostart e desktop
+    copy:
+      src: Arquivos/firefox.desktop
+      dest: "{{ item }}"
+      owner: "{{ ansible_user }}"
+    loop:
+      - "/home/{{ ansible_user }}/.config/autostart/firefox.desktop"
+      - "/home/{{ ansible_user }}/Desktop/firefox.desktop"
+
+  # ================== LIGHTDM AUTOLOGIN ==================
+  - name: Definir configurações do LIGHTDM
+    lineinfile:
+      path: '/etc/lightdm/lightdm.conf'
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+      - { regexp: '^#?type=local', line: 'autologin-guest=false' }
+      - { regexp: '^#?pam-service=lightdm', line: 'autologin-user={{ ansible_user }}' }
+      - { regexp: '^#?pam-autologin-service=lightdm-autologin', line: 'autologin-user-timeout=0' }
+
+  # ================== OPENBOX ATALHO ==================
+  - name: Ajustar atalho Openbox [CTRL + ALT + L]
+    copy:
+      src: Arquivos/lxde-rc.xml
+      dest: /home/{{ansible_user}}/.config/openbox/
+
+  # ================= CONFIGURAÇÃO OCS ================
+  - name: Configurando OCS
+    replace:
+      path: /etc/ocsinventory/ocsinventory-agent.cfg
+      regexp: '^local=.*'
+      replace: "server=https://{{ ocs_server_playbook }}/ocsinventory"
+
+  - name: Criar arquivo OCS
+    copy:
+      dest: /home/{{ ansible_user }}/Documentos/ocs.sh
+      content: "sudo ocsinventory-agent --server {{ ocs_server_playbook }}"
+      mode: '0755'
+
+  - name: Executar OCS pela primeira vez
+    shell: sudo /home/{{ ansible_user }}/Documentos/ocs.sh
+
+  - name: Agenda crontab do OCS
+    cron:
+      name: "OCS Inventory"
+      minute: "0"
+      hour: "0"
+      job: "/home/{{ ansible_user }}/Documentos/ocs.sh"
+
+  # ================ INTERFACE GRAFICA ===================
+  - name: Alterar barra de tarefas
+    replace:
+      path: /home/{{ ansible_user }}/.config/lxsession/LXDE/autostart
+      regexp: '@lxpanel --profile LXDE'
+      replace: "#@lxpanel --profile LXDE"
+
+  - name: Alterar gerenciador de desktop(pcmanfm)
+    lineinfile:
+      path: /usr/share/pcmanfm/ui/desktop-pref.ui
+      line: '<!--'
+      insertbefore: BOF
+
+  - name: removendo menu do openbox
+    file: 
+      path: /etc/xdg/openbox/menu.xml
+      state: absent
+
+  # ================== SUDO POWER OFF ==================
+  - name: Permitir poweroff sem senha
+    lineinfile:
+      path: /etc/sudoers
+      line: "{{ ansible_user }} ALL=(ALL) NOPASSWD: /sbin/poweroff"
+      validate: 'visudo -cf %s'
+
+  # ============== REINICIAR ESTAÇÃO ================
+  - name: Reiniciar máquina
+
+    shell: sudo /sbin/reboot

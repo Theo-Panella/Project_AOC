@@ -1,0 +1,7 @@
+- hosts: machines
+  vars_files:
+    - group_vars/all/passwd.vault.yml
+
+  tasks:
+  - name: executar rdp
+    shell: xfreerdp3 /u:{{ userRDP }} /p:{{ passwdRDP }} /v:{{ serverRDP }} /cert:tofu
