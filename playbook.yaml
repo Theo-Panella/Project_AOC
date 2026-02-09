@@ -116,7 +116,7 @@
   - name: Garantir scripts executáveis com 511 de permissão #5 = r-x / #1 = --x / #1 = --x
     file:
       path: "{{ site_path }}/{{ item }}"
-      mode: '0511'
+      mode: '511'
     loop:
       - desligar.sh
       - conectar.sh
