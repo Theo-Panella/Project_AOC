@@ -57,9 +57,10 @@ group_vars/all/passwd.yml
 ## 📋 Requisitos
 
 - Hosts remotos: OpenSSH Server e Python 3.x
+- Host RDP
 - Host de controle: Ansible 2.9+ e acesso SSH aos hosts alvo
 
-Instalar Ansible (exemplo Debian/Ubuntu):
+Instalar Ansible no host de controle (exemplo Debian/Ubuntu):
 
 ```bash
 sudo apt-get update
@@ -69,7 +70,9 @@ sudo apt-get install ansible -y
 ## 🚀 Como Usar
 
 1. Atualize `inventory.yaml` com seus hosts e `ansible_user`.
-2. Opcional: atualize e (se desejar) criptografe `group_vars/all/passwd.yml` com Ansible Vault.
+2. Atualize e (se desejar) criptografe `group_vars/all/passwd.yml` com Ansible Vault.
+   - '''bash
+      ansible-vault encrypt group_vars/all/passwd.yml '''
 3. Execute o playbook principal:
 
 ```bash
@@ -84,7 +87,7 @@ ansible-playbook -i inventory.yaml playbook_First_connec.yaml --ask-vault-pass
 
 ## ℹ️ Para que Serve?
 
-Automatiza a configuração de estações Linux Debian (instalação, ajustes de interface, serviços e integração RDP) para facilitar manutenção e padronização em larga escala.
+Automatiza a configuração de estações Linux Debian LXDE (instalação, ajustes de interface, serviços e integração RDP) para facilitar manutenção e padronização em larga escala.
 
 ## Referências
 
