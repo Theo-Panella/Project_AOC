@@ -1,6 +1,8 @@
+# machines: Nome do grupo de hosts 
 machines:
   vars:
     ansible_python_interpreter: "/usr/bin/python3.Version"
+  # Definir os hosts do grupo "machines" com cada Usuario e IP correspondente
   hosts:
     'IP_Machine_1':
       ansible_user: Usuario_Machine_1

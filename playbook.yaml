@@ -1,12 +1,21 @@
+# Hosts: Nome do grupo de hosts definido no arquivo de inventário (inventory.yaml)
+#  become: yes -> Permite a execução de tarefas com privilégios elevados (sudo), utiliza ansible_become_pass para fornecer a senha de sudo.
+#
+# vars_files: Permite incluir arquivos de variáveis externas, como o passwd.yml, que contém as senhas para acesso remoto e sudo.
+#
+# vars: Define variáveis específicas para este playbook, como o caminho do site e a senha de sudo, que é obtida do arquivo de variáveis.
+#
+# tasks: Define as tarefas a serem feitas em cada maquina dos Hosts
+# name: Nome daquela tarefa em especifico, melhorando a organização e legibilidade do playbook.
+
 - hosts: machines
   become: yes
 
   vars_files:
-    - group_vars/all/passwd.vault.yml
+    - group_vars/all/passwd.yml
 
   vars:
     site_path: /home/{{ ansible_user }}/Documentos/Site_debian_rdp
-    ocs_server_playbook: '{{ ocs_server }}'
     ansible_become_pass: >- 
       {{ sudo_passwords[inventory_hostname][ansible_user].become }}
 
@@ -46,8 +55,7 @@
         - ufw
         - cups
         - system-config-printer
-        - freerdp3-x11
-        - ocsinventory-agent
+        - freerdp3-x11  
         - node-express
         - npm
       state: present
@@ -89,13 +97,6 @@
       port: any
       proto: any
 
-  - name: Permitir acesso ao OCS Server
-    ufw:
-      rule: allow
-      src: "{{ ocs_server_playbook }}"
-      port: 80
-      proto: tcp
-
   # ================== CUPS ==================
   - name: Habilitar serviço CUPS
     service:
@@ -106,7 +107,7 @@
   # ================== SITE NODE ==================
   - name: Copiar site RDP
     copy:
-      src: ~/Documentos/ansible/Site_debian_rdp
+      src: ~/Documentos/Ansible_Open_Configuration-AOC-/Site_debian_rdp
       dest:  /home/{{ ansible_user }}/Documentos
       owner: "{{ ansible_user }}"
       group: "{{ ansible_user }}"
@@ -189,35 +190,6 @@
       - { regexp: '^#?type=local', line: 'autologin-guest=false' }
       - { regexp: '^#?pam-service=lightdm', line: 'autologin-user={{ ansible_user }}' }
       - { regexp: '^#?pam-autologin-service=lightdm-autologin', line: 'autologin-user-timeout=0' }
-
-  # ================== OPENBOX ATALHO ==================
-  - name: Ajustar atalho Openbox [CTRL + ALT + L]
-    copy:
-      src: Arquivos/lxde-rc.xml
-      dest: /home/{{ansible_user}}/.config/openbox/
-
-  # ================= CONFIGURAÇÃO OCS ================
-  - name: Configurando OCS
-    replace:
-      path: /etc/ocsinventory/ocsinventory-agent.cfg
-      regexp: '^local=.*'
-      replace: "server=https://{{ ocs_server_playbook }}/ocsinventory"
-
-  - name: Criar arquivo OCS
-    copy:
-      dest: /home/{{ ansible_user }}/Documentos/ocs.sh
-      content: "sudo ocsinventory-agent --server {{ ocs_server_playbook }}"
-      mode: '0755'
-
-  - name: Executar OCS pela primeira vez
-    shell: sudo /home/{{ ansible_user }}/Documentos/ocs.sh
-
-  - name: Agenda crontab do OCS
-    cron:
-      name: "OCS Inventory"
-      minute: "0"
-      hour: "0"
-      job: "/home/{{ ansible_user }}/Documentos/ocs.sh"
 
   # ================ INTERFACE GRAFICA ===================
   - name: Alterar barra de tarefas
