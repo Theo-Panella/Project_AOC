@@ -34,18 +34,18 @@ Fluxo principal:
 
 ```mermaid
 flowchart TD
-    A(["Start"]) --> B["Definir inventário e variáveis"]
-    B --> C{"Playbook"}
-    C --> D{"Inventory"}
-    D --> E[Server 1]
-    D --> F[Server 2]
-    D --> G[Server 3]
-    E --> H["Reiniciar sistema e validar serviços"]
-    F --> H["Reiniciar sistema e validar serviços"]
-    G --> H["Reiniciar sistema e validar serviços"]
-    H --> I{"Precisa RDP inicial?"}
-    I -->|Sim| J["Executar playbook_First_connec.yaml"]
-    I -->|Não| K(["End"])
+    A["Definir inventário e variáveis"]
+    A --> B{"Playbook"}
+    B --> C{"Inventory"}
+    C --> D[Server 1]
+    C --> E[Server 2]
+    C --> F[Server 3]
+    D --> G["Reiniciar sistema e validar serviços"]
+    E --> G["Reiniciar sistema e validar serviços"]
+    F --> G["Reiniciar sistema e validar serviços"]
+    G --> H{"Precisa RDP inicial?"}
+    H -->|Sim| I["Executar playbook_First_connec.yaml"]
+    H -->|Não| J(["End"])
 ```
 
 1. Aplicar configurações SSH e segurança
