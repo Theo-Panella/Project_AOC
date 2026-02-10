@@ -32,12 +32,7 @@ Uma solução prática e documentada para automação e configuração de estaç
 
 Fluxo principal:
 
-```
----
-config:
-  theme: neo
----
-mermaid
+```---config:theme: neo---mermaid
 flowchart TD
     A(["Start"]) --> B["Definir inventário e variáveis"]
     B --> C{"Playbook"}
