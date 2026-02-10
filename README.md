@@ -40,12 +40,14 @@ flowchart TD
     C --> D[Server 1]
     C --> E[Server 2]
     C --> F[Server 3]
-    D --> G["Reiniciar sistema e validar serviços"]
-    E --> G["Reiniciar sistema e validar serviços"]
-    F --> G["Reiniciar sistema e validar serviços"]
-    G --> H{"Precisa RDP inicial?"}
-    H -->|Sim| I["Executar playbook_First_connec.yaml"]
-    H -->|Não| J(["End"])
+    
+    D --> G["Aplicar configurações e validar serviços"]
+    E --> G["Aplicar configurações e validar serviços"]
+    F --> G["Aplicar configurações e validar serviços"]
+    G --> H["Reiniciar Sistema"]
+    H --> I{"Precisa RDP inicial?"}
+    I -->|Sim| J["Executar playbook_First_connec.yaml"]
+    I -->|Não| K(["End"])
 ```
 
 1. Aplicar configurações SSH e segurança
