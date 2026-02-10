@@ -35,7 +35,7 @@ Fluxo principal:
 ```mermaid
 flowchart TD
     A["Definir inventário e variáveis"]
-    A --> B{"Playbook"}
+    A --> B{"Executar Playbook"}
     B --> C{"Inventory"}
     C --> D[Server 1]
     C --> E[Server 2]
