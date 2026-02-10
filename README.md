@@ -31,7 +31,13 @@ Uma solução prática e documentada para automação e configuração de estaç
 ## ⚙️ Como Funciona (resumo)
 
 Fluxo principal:
-```mermaid
+
+```
+---
+config:
+  theme: neo
+---
+mermaid
 flowchart TD
     A(["Start"]) --> B["Definir inventário e variáveis"]
     B --> C{"Playbook"}
