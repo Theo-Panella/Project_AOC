@@ -27,9 +27,27 @@ Uma solução prática e documentada para automação e configuração de estaç
     └── page/index.html
 ```
 
+
 ## ⚙️ Como Funciona (resumo)
 
 Fluxo principal:
+´´´
+mermaid
+flowchart TD
+    A(["Start"]) --> B["Definir inventário e variáveis"]
+    B --> C{"Playbook"}
+    C --> D{"Inventory"}
+    D --> E[Server 1]
+    D --> F[Server 2]
+    D --> G[Server 3]
+    E --> H["Reiniciar sistema e validar serviços"]
+    F --> H["Reiniciar sistema e validar serviços"]
+    G --> H["Reiniciar sistema e validar serviços"]
+    H --> I{"Precisa RDP inicial?"}
+    I -->|Sim| J["Executar playbook_First_connec.yaml"]
+    I -->|Não| K(["End"])
+´´´
+
 
 1. Aplicar configurações SSH e segurança
 2. Instalar pacotes e dependências
