@@ -57,7 +57,7 @@ flowchart TD
 5. Configurar LightDM, autostart e permissões
 6. Habilitar serviço Node.js e reiniciar quando necessário
 
-## 🔐 Segurança e credenciais
+## Segurança e credenciais
 
 - `group_vars/all/passwd.yml` é um **modelo** (arquivo de exemplo). Não coloque credenciais reais em texto plano em repositórios públicos.
 - Recomenda-se usar Ansible Vault para variáveis sensíveis:
@@ -86,7 +86,7 @@ sudo apt-get update
 sudo apt-get install ansible -y
 ```
 
-## 🚀 Como Usar
+## Como Usar
 
 1. Atualize `inventory.yaml` com seus hosts e `ansible_user`.
 2. Atualize e (se desejar) criptografe `group_vars/all/passwd.yml` com Ansible Vault.
