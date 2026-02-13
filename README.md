@@ -47,7 +47,7 @@ flowchart TD
     G --> H["Reiniciar Sistema"]
     H --> I{"Precisa RDP inicial?"}
     I -->|Sim| J["Executar playbook_First_connec.yaml"]
-    I -->|Não| K(["End"])
+    I -->|Não| K(["Fim"])
 ```
 
 1. Aplicar configurações SSH e segurança
