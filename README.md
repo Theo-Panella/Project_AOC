@@ -28,7 +28,7 @@ Uma solução prática e documentada para automação e configuração de estaç
 ```
 
 
-## ⚙️ Como Funciona (resumo)
+## Como Funciona (resumo)
 
 Fluxo principal:
 
@@ -73,7 +73,7 @@ group_vars/all/passwd.yml
 *.vault.yml
 ```
 
-## 📋 Requisitos
+## Requisitos
 
 - Hosts remotos: OpenSSH Server e Python 3.x
 - Host RDP
