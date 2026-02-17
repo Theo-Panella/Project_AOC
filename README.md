@@ -1,6 +1,6 @@
 # Project_AOC (Ansible Open Configuration)
 
-Uma solução prática e documentada para automação e configuração de estações de trabalho Linux via Ansible, com integração de acesso remoto RDP e gerenciamento centralizado.
+Esse projeto foi realizado em ambiente empresarial. Solução focada em ansible, para configuração automatizada de estações de usuarios
 
 ---
 
@@ -34,20 +34,12 @@ Fluxo principal:
 
 ```mermaid
 flowchart TD
-    A["Definir inventário e variáveis"]
-    A --> B{"Executar Playbook"}
-    B --> C{"Inventory"}
-    C --> D[Server 1]
-    C --> E[Server 2]
-    C --> F[Server 3]
-    
-    D --> G["Aplicar configurações e validar serviços"]
-    E --> G["Aplicar configurações e validar serviços"]
-    F --> G["Aplicar configurações e validar serviços"]
-    G --> H["Reiniciar Sistema"]
-    H --> I{"Precisa RDP inicial?"}
-    I -->|Sim| J["Executar playbook_First_connec.yaml"]
-    I -->|Não| K(["Fim"])
+    A[Aplicar configurações SSH e segurança] --> B[Instalar pacotes e dependências]
+    B --> C[Limpar pacotes desnecessários]
+    C --> D[Copiar / ativar aplicação Site_debian_rdp]
+    D --> E[Configurar LightDM, autostart e permissões]
+    E --> F[Habilitar serviço Node.js]
+    F --> G[Reiniciar serviço quando necessário]
 ```
 
 1. Aplicar configurações SSH e segurança
