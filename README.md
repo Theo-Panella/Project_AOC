@@ -1,7 +1,7 @@
 # Project_AOC (Ansible Open Configuration)
 
     
-####Este é um modelo de um projeto realizado em ambiente empresarial, a solução foca em ansible, para configuração automatizada de estações de usuarios.
+    Este é um modelo de um projeto realizado em ambiente empresarial, a solução foca em ansible, para configuração automatizada de estações de usuarios.
 O principio do projeto original, é a implementação de automatização no ambiente de Suporte, nesse cenário inicial, foi utilizado para Desktops antigos (fora de linha) o uso de RDP para possibilitar a continuidade de tais Desktops
 
 ---
