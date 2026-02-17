@@ -1,4 +1,4 @@
-# Project_AOC
+# Project_AOC (Ansible Open Configuration)
 
 Uma solução prática e documentada para automação e configuração de estações de trabalho Linux via Ansible, com integração de acesso remoto RDP e gerenciamento centralizado.
 
