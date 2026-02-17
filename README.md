@@ -1,7 +1,7 @@
 # Project_AOC (Ansible Open Configuration)
 
-Esse projeto foi realizado em ambiente empresarial. Solução focada em ansible, para configuração automatizada de estações de usuarios
-
+Este é um modelo de um projeto realizado em ambiente empresarial, a solução foca em ansible, para configuração automatizada de estações de usuarios.
+O principio do projeto original, é a implementação de automatização no ambiente de Suporte, nesse cenário inicial, foi utilizado para Desktops antigos (fora de linha) o uso de RDP para possibilitar a continuidade de tais Desktops
 ---
 
 ## 📁 Estrutura do Projeto
@@ -31,7 +31,6 @@ Esse projeto foi realizado em ambiente empresarial. Solução focada em ansible,
 ## Como Funciona (resumo)
 
 Fluxo principal:
-
 ```mermaid
 flowchart TD
     A[Aplicar configurações SSH e segurança] --> B[Instalar pacotes e dependências]
@@ -42,16 +41,9 @@ flowchart TD
     F --> G[Reiniciar serviço quando necessário]
 ```
 
-1. Aplicar configurações SSH e segurança
-2. Instalar pacotes e dependências
-3. Limpar pacotes desnecessários
-4. Copiar/ativar a aplicação `Site_debian_rdp`
-5. Configurar LightDM, autostart e permissões
-6. Habilitar serviço Node.js e reiniciar quando necessário
-
 ## Segurança e credenciais
 
-- `group_vars/all/passwd.yml` é um **modelo** (arquivo de exemplo). Não coloque credenciais reais em texto plano em repositórios públicos.
+- `group_vars/all/passwd.yml` é um **modelo** (arquivo de exemplo). Não coloquei credenciais reais em texto plano.
 - Recomenda-se usar Ansible Vault para variáveis sensíveis:
 
 ```bash
