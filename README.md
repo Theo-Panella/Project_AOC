@@ -41,11 +41,12 @@ Fluxo principal:
 ```mermaid
 flowchart TD
     A[Aplicar configurações SSH e segurança] --> B[Instalar pacotes e dependências]
-    B --> C[Limpar pacotes desnecessários]
-    C --> D[Copiar / ativar aplicação Site_debian_rdp]
-    D --> E[Configurar LightDM, autostart e permissões]
-    E --> F[Habilitar serviço Node.js]
-    F --> G[Reiniciar serviço quando necessário]
+    B --> C[Instalar pacotes necessarios]
+    C --> D[Limpar pacotes desnecessários]
+    D --> E[Copiar/ativar aplicação Site_debian_rdp]
+    E --> F[Configurar LightDM, autostart e permissões]
+    F --> G[Habilitar e atualizar serviços internos]
+    G --> H[Reiniciar serviço quando necessário]
 ```
 
 ## Segurança e credenciais
