@@ -81,8 +81,9 @@ sudo apt-get install ansible -y
 
 1. Atualize `inventory.yaml` com seus hosts e `ansible_user`.
 2. Atualize e (se desejar) criptografe `group_vars/all/passwd.yml` com Ansible Vault.
-   - '''bash
-      ansible-vault encrypt group_vars/all/passwd.yml '''
+   ``` bash
+     ansible-vault encrypt group_vars/all/passwd.yml
+     ```
 3. Execute o playbook principal:
 
 ```bash
