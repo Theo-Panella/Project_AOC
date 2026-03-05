@@ -1,32 +1,32 @@
 # Project_AOC (Ansible Open Configuration)
 
-Este é um modelo de um projeto realizado em ambiente empresarial, a solução foca em ansible, para configuração automatizada de estações de usuarios. O principio do projeto original, é a implementação de automatização no ambiente de Suporte, nesse cenário inicial, foi utilizado para Desktops antigos (fora de linha) o uso de RDP para possibilitar a continuidade de tais Desktops
+This is a template of a project carried out in a corporate environment. The solution focuses on Ansible for automated configuration of user workstations. The principle of the original project is the implementation of automation in the Support environment. In this initial scenario, RDP was used for old (discontinued) Desktops to enable the continuity of such Desktops.
 
-- Configurar conexão segura via openssh-server
-- Instalação de Pacotes
-- Configuração de UFW
-- Instalação e Configuração para o site Node
-- Configuração do Systemd e Lightdm
-- Modificação da interface gráfica
+- Configure secure connection via openssh-server
+- Package Installation
+- UFW Configuration
+- Installation and Configuration for the Node site
+- Systemd and Lightdm Configuration
+- Graphical interface modification
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 .
-├── inventory.yaml                 # Inventário (hosts e users)
-├── playbook.yaml                  # Playbook principal de configuração
-├── playbook_First_connec.yaml     # Playbook para iniciar o RDP
-├── group_vars/                    # Variáveis do Ansible
+├── inventory.yaml                 # Inventory (hosts and users)
+├── playbook.yaml                  # Main configuration playbook
+├── playbook_First_connec.yaml     # Playbook to start RDP
+├── group_vars/                    # Ansible variables
 │   └── all/
-│       └── passwd.yml             # Modelo de arquivo do Vault (exemplo)
-├── Arquivos/                      # Arquivos locais usados pelo playbook
+│       └── passwd.yml             # Vault file template (example)
+├── Arquivos/                      # Local files used by the playbook
 │   ├── firefox.desktop
 │   ├── lxde-rc.xml
 │   └── arquivo_backup/
 │       └── lightdm.conf
-└── Site_debian_rdp/               # Aplicação Node.js para RDP
+└── Site_debian_rdp/               # Node.js application for RDP
     ├── server.js
     ├── conectar.sh
     ├── desligar.sh
@@ -35,79 +35,79 @@ Este é um modelo de um projeto realizado em ambiente empresarial, a solução f
 ```
 
 
-## Como Funciona (resumo)
+## How it Works (summary)
 
-Fluxo principal:
+Main flow:
 ```mermaid
 flowchart TD
-    A[Aplicar configurações SSH e segurança] --> B[Instalar pacotes e dependências]
-    B --> C[Instalar pacotes necessarios]
-    C --> D[Limpar pacotes desnecessários]
-    D --> E[Copiar/ativar aplicação Site_debian_rdp]
-    E --> F[Configurar LightDM, autostart e permissões]
-    F --> G[Habilitar e atualizar serviços internos]
-    G --> H[Reiniciar serviço quando necessário]
+    A[Apply SSH and security configurations] --> B[Install packages and dependencies]
+    B --> C[Install necessary packages]
+    C --> D[Clean unnecessary packages]
+    D --> E[Copy/activate Site_debian_rdp application]
+    E --> F[Configure LightDM, autostart and permissions]
+    F --> G[Enable and update internal services]
+    G --> H[Restart service when necessary]
 ```
 
-## Segurança e credenciais
+## Security and credentials
 
-- `group_vars/all/passwd.yml` é um **modelo** (arquivo de exemplo). Não coloquei credenciais reais em texto plano.
-- Recomenda-se usar Ansible Vault para variáveis sensíveis:
+- `group_vars/all/passwd.yml` is a **template** (example file). Real credentials were not placed in plain text.
+- It is recommended to use Ansible Vault for sensitive variables:
 
 ```bash
 ansible-vault encrypt group_vars/all/passwd.yml
 ```
 
-- Sugestão de `.gitignore` para evitar commitar credenciais reais:
+- `.gitignore` suggestion to avoid committing real credentials:
 
 ```
 group_vars/all/passwd.yml
 *.vault.yml
 ```
 
-## Requisitos
+## Requirements
 
-- Hosts remotos: OpenSSH Server e Python 3.x
-- Host RDP
-- Host de controle: Ansible 2.9+ e acesso SSH aos hosts alvo
+- Remote hosts: OpenSSH Server and Python 3.x
+- RDP Host
+- Control host: Ansible 2.9+ and SSH access to target hosts
 
-Instalar Ansible no host de controle (exemplo Debian/Ubuntu):
+Install Ansible on the control host (e.g., Debian/Ubuntu):
 
 ```bash
 sudo apt-get update
 sudo apt-get install ansible -y
 ```
 
-## Como Usar
+## How to Use
 
-1. Atualize `inventory.yaml` com seus hosts e `ansible_user`.
-2. Atualize e (se desejar mais segurança em relação a esses dados) criptografe `group_vars/all/passwd.yml` com Ansible Vault.
+1. Update `inventory.yaml` with your hosts and `ansible_user`.
+2. Update and (if you want more security regarding this data) encrypt `group_vars/all/passwd.yml` with Ansible Vault.
 ``` bash
 ansible-vault encrypt group_vars/all/passwd.yml
 ```
-3. Execute o playbook principal:
+3. Run the main playbook:
 
 ```bash
 ansible-playbook -i inventory.yaml playbook.yaml --ask-vault-pass
 ```
 
-4. Caso necessário, após reinicializações execute o playbook de conexão RDP:
+4. If necessary, after reboots, run the RDP connection playbook:
 
 ```bash
 ansible-playbook -i inventory.yaml playbook_First_connec.yaml --ask-vault-pass
 ```
 
-## ℹ️ Para que Serve?
+## ℹ️ What is it for?
 
-Automatiza a configuração de estações Linux Debian LXDE (instalação, ajustes de interface, serviços e integração RDP) para facilitar manutenção e padronização em larga escala.
+Automates the configuration of Linux Debian LXDE workstations (installation, interface adjustments, services, and RDP integration) to facilitate large-scale maintenance and standardization.
 
-## Referências
+## References
 
-- [Documentação Ansible](https://docs.ansible.com/)
-- [Documentação Express.js](https://expressjs.com/)
-- [Documentação FreeRDP](https://github.com/FreeRDP/FreeRDP/wiki)
+- [Ansible Documentation](https://docs.ansible.com/)
+- [Express.js Documentation](https://expressjs.com/)
+- [FreeRDP Documentation](https://github.com/FreeRDP/FreeRDP/wiki)
 
 ---
 
-**Última atualização:** 9 de fevereiro de 2026  
-**Versão:** 1.0.0
+**Last updated:** February 9, 2026  
+**Version:** 1.0.0
