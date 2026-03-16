@@ -13,7 +13,7 @@
 
 ```mermaid
 flowchart TD
-    A[Control Node\nAnsible + SSH Key] -->|SSH| B[inventory.yaml\nHosts Alvo]
+    A[Control Node\nAnsible + SSH Key] -->|SSH| B[inventory.yaml - Hosts Alvo]
 
     subgraph Execução dos Playbooks
         B --> C[playbook_First_connec.yaml\nConexão SSH Inicial]
