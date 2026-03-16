@@ -101,19 +101,19 @@ ansible-vault encrypt group_vars/all/passwd.yml
 
 > **Atenção:** nunca commite `passwd.yml` sem criptografia. O `.gitignore` já exclui arquivos `.vault.yml`, mas confirme antes de um `git push`.
 
-### 4. Execute o playbook de conexão inicial
+### 4. Execute a configuração principal
 
-Rode este playbook apenas na primeira vez, para configurar o acesso SSH:
+```bash
+ansible-playbook -i inventory.yaml playbook.yaml --ask-vault-pass
+```
+### 5. Execute o playbook de conexão inicial
+
+Rode este playbook apenas na primeira vez, para configurar o acesso do xfreerdp:
 
 ```bash
 ansible-playbook -i inventory.yaml playbook_First_connec.yaml --ask-vault-pass
 ```
 
-### 5. Execute a configuração principal
-
-```bash
-ansible-playbook -i inventory.yaml playbook.yaml --ask-vault-pass
-```
 
 O playbook executa em sequência: SSH → pacotes → UFW → Node.js → LightDM → serviços. Ao fim, o host está com RDP habilitado e pronto para acesso remoto.
 
