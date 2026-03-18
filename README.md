@@ -1,6 +1,6 @@
 # Project_AOC — Ansible Open Configuration
 
-![Ansible](https://img.shields.io/badge/ansible-passing-brightgreen)
+![Ansible](https://img.shields.io/badge/ansible-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Debian%20%7C%20Ubuntu-orange)
 ![Status](https://img.shields.io/badge/status-active-success)
 
