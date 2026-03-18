@@ -1,7 +1,6 @@
 # Project_AOC — Ansible Open Configuration
 
 ![Ansible Lint](https://img.shields.io/badge/ansible--lint-passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
 ![Platform](https://img.shields.io/badge/platform-Debian%20%7C%20Ubuntu-orange)
 ![Status](https://img.shields.io/badge/status-active-success)
 
